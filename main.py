@@ -92,6 +92,7 @@ def excel_workflow():
     print('[*]' + ''.center(57, '='))
     filePath = f'{getcwd()}/{fileName}'.replace('\\', '/')
     print(f"[*]檔案路徑： {filePath}")
+    input('[*]按下「Enter]鍵來結束程式')
 
 
 if __name__ == '__main__':
