@@ -101,15 +101,17 @@ if __name__ == '__main__':
     print('[*]\t年份輸入民國或西元年皆可。')
     print('[*]' + ''.center(57, '='))
     while True:
+        print('[*]直接按「Enter」來結束程式')
         birthDay = input('[?]請輸入出生年月日？ ').replace('"', '').removesuffix(' ')
+        
+        if birthDay == '':
+            break
 
         if os.path.isfile(birthDay):
             excel_workflow()
-            break
         else:
             try:
                 print(f'[>]生日：{birthDay.replace(" ", ".")}\t年齡：{get_years_old(birthDay)}')
             except IndexError:
                 print('[!]生日資料輸入不完全！')
                 continue
-            break
