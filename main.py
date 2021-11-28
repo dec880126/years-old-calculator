@@ -1,4 +1,5 @@
-import datetime
+from datetime import date
+from datetime import datetime as dt
 from pandas import read_excel, DataFrame
 import os.path
 from os import getcwd
@@ -45,21 +46,6 @@ def minus_result(first_year, second_year):
     else:
         return y
 
-# dotdot = datetime.date(
-#     year=int(input('请输入你的出生年份：')),
-#     month=int(input('请输入你的出生月份：')),
-#     day=int(input('请输入你的出生日期：'))
-# )
-
-# t = datetime.date(
-#     year=int(input('請輸入出團年份：')),
-#     month=int(input('請輸入出團月份：')),
-#     day=int(input('請輸入出團日期：'))
-# )
-
-# birthList = ['64.02.28', '65.12.29', '48.11.17', '71.05.28']
-
-
 
 def get_years_old(birth: str):
 
@@ -71,12 +57,12 @@ def get_years_old(birth: str):
     m = int(birthSpilt[1])
     d = int(birthSpilt[2])
 
-    birth = datetime.date(
+    birth = date(
         year=y,
         month=m,
         day=d
     )
-    return f'{minus_result(datetime.datetime.today(), birth)}'
+    return f'{minus_result(dt.today(), birth)}'
 
 
 def excel_workflow():
