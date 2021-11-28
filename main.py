@@ -66,7 +66,6 @@ def get_years_old(birth: str):
 
 
 def excel_workflow():
-    print('[*]' + '執行結果'.center(53, '='))
     df = read_excel(
         birthDay,
         usecols= 'A:B'
@@ -92,18 +91,25 @@ def excel_workflow():
     print('[*]' + ''.center(57, '='))
     filePath = f'{getcwd()}/{fileName}'.replace('\\', '/')
     print(f"[*]檔案路徑： {filePath}")
-    input('[*]按下「Enter]鍵來結束程式')
+    input('[*]按下「Enter]鍵繼續...')
+
+def clearConsole() -> None:
+    command = "clear"
+    if os.name in ("nt", "dos"):  # If Machine is running on Windows, use cls
+        command = "cls"
+    os.system(command)
 
 
 if __name__ == '__main__':
-    print('[*]' + '年齡計算小工具'.center(50, '='))
-    print('[*]說明：')
-    print('[*]\t年份輸入民國或西元年皆可。')
-    print('[*]' + ''.center(57, '='))
     while True:
-        print('[*]直接按「Enter」來結束程式')
+        print('[*]' + '年齡計算小工具'.center(50, '='))
+        print('[*]說明：')
+        print('[*]\t年份輸入民國或西元年皆可。')
+        print('[*]如果要結束程式，直接按下「Enter」即可。')
+        print('[*]' + ''.center(57, '='))
         birthDay = input('[?]請輸入出生年月日？ ').replace('"', '').removesuffix(' ')
-        
+        print('[*]' + '執行結果'.center(53, '='))
+
         if birthDay == '':
             break
 
@@ -111,7 +117,8 @@ if __name__ == '__main__':
             excel_workflow()
         else:
             try:
-                print(f'[>]生日：{birthDay.replace(" ", ".")}\t年齡：{get_years_old(birthDay)}')
+                print(f'[>]生日：{birthDay.replace(" ", ".")}\n[>]年齡：{get_years_old(birthDay)}')
+                input('[*]按下「Enter]鍵繼續...')
             except IndexError:
                 print('[!]生日資料輸入不完全！')
-                continue
+        clearConsole()
