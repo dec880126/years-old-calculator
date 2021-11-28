@@ -1,4 +1,7 @@
 import datetime
+from pandas import read_excel, DataFrame
+import os.path
+from os import getcwd
 
 def is_leap(year):
     if year % 400 == 0 or year % 40 == 0 or year % 4 == 0:
@@ -58,16 +61,11 @@ def minus_result(first_year, second_year):
 
 
 
-def get_years_old(birth, day):
+def get_years_old(birth: str):
+
+    birth = birth.replace('/', '.').replace('-', '.').replace(' ', '.').replace('\\', '.')
     
-    if '.' in birth:
-        birthSpilt = birth.split('.')
-    elif '/' in birth:
-        birthSpilt = birth.split('/')
-    elif '-' in birth:
-        birthSpilt = birth.split('-')
-    else:
-        birthSpilt = birth.split()
+    birthSpilt = birth.split('.')
 
     y = int(birthSpilt[0]) if int(birthSpilt[0]) > 1000 else int(birthSpilt[0])+1911
     m = int(birthSpilt[1])
@@ -78,25 +76,53 @@ def get_years_old(birth, day):
         month=m,
         day=d
     )
-    return f'[>]年齡：{minus_result(day, birth)}'
+    return f'{minus_result(datetime.datetime.today(), birth)}'
 
-# for birth in birthList:
-#     print(get_years_old(birth))
+
+def excel_workflow():
+    print('[*]' + '執行結果'.center(53, '='))
+    df = read_excel(
+        birthDay,
+        usecols= 'A:B'
+    )
+
+    result_xlsx = DataFrame(
+        {
+            '姓名': [df.iat[idx, 0] for idx in range(df.shape[0])],
+            '生日': [df.iat[idx, 1] for idx in range(df.shape[0])],
+            '年齡': [get_years_old(df.iat[idx, 1]) for idx in range(df.shape[0])],
+        }
+    )
+
+    for idx in range(len(df)):
+        print(f"[>]姓名：{df.iat[idx, 0]}\t生日：{df.iat[idx, 1]}\t年齡：{get_years_old(df.iat[idx, 1])}")
+
+    fileName = f"{birthDay.split('/')[-1].removesuffix('.xlsx') + '-年齡計算'}.xlsx"
+    result_xlsx.to_excel(
+        fileName,
+        sheet_name='年齡計算',
+        index=False
+    )
+    print('[*]' + ''.center(57, '='))
+    filePath = f'{getcwd()}/{fileName}'.replace('\\', '/')
+    print(f"[*]檔案路徑： {filePath}")
+
 
 if __name__ == '__main__':
     print('[*]' + '年齡計算小工具'.center(50, '='))
     print('[*]說明：')
     print('[*]\t年份輸入民國或西元年皆可。')
     print('[*]' + ''.center(57, '='))
+    while True:
+        birthDay = input('[?]請輸入出生年月日？ ').replace('"', '').removesuffix(' ')
 
-    birthDay = input('[?]請輸入出生年月日？ ')
-    
-    try:
-        print(
-            get_years_old(
-                birth=birthDay,
-                day=datetime.datetime.today()
-            )
-        )
-    except TypeError:
-        print('[!]生日格式輸入錯誤！')
+        if os.path.isfile(birthDay):
+            excel_workflow()
+            break
+        else:
+            try:
+                print(f'[>]生日：{birthDay.replace(" ", ".")}\t年齡：{get_years_old(birthDay)}')
+            except IndexError:
+                print('[!]生日資料輸入不完全！')
+                continue
+            break
